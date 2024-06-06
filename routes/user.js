@@ -14,9 +14,10 @@ router.get('/sendResetPasswordEmail',  asyncHandler(userControllers.sendResetPas
 router.post('/resetPassword/:resetToken', asyncHandler(userControllers.resetPassword));
 // Verify email
 router.get('/verify/:token',asyncHandler(userControllers.verifyEmail ))
-// Get user information
-router.get('/:id' ,asyncHandler(userControllers.getUserInfo ))
-// Update user information
-router.put('/:id' ,asyncHandler(userControllers.updateUser) )
+
+router.route('/:id')
+  .get(asyncHandler(userControllers.getUserInfo ))// Get user information
+  .put(asyncHandler(userControllers.updateUser)) // Update user information
+ 
 
 module.exports = router;

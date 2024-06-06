@@ -1,10 +1,9 @@
 const Book = require('../models/book');
 const BookVersion = require('../models/bookVersion');
-
 const ExpressError = require("../utils/express_error");
 
 const createBook = async(bookInfo)=>{
-    const { title , author ,genre ,price,availability ,userId} = bookInfo;
+    const { title , author ,genre ,price,availability,quantity ,userId} = bookInfo;
 
     const book = await Book.create({
         title,
@@ -12,6 +11,7 @@ const createBook = async(bookInfo)=>{
         genre,
         price,
         availability,
+        quantity,
         user:userId
     });
     if(!book){
@@ -29,7 +29,7 @@ const getBook = async(bookId)=>{
 };
 
 const editBook = async(bookInfo) =>{
-    const { title , author ,genre ,price,availability ,userId ,bookId} = bookInfo;
+    const { title , author ,genre ,price,availability,quantity ,userId ,bookId} = bookInfo;
     const book = await Book.findById(bookId);;
     if(!book){
         throw new ExpressError("Book not found", 404);
@@ -46,6 +46,7 @@ const editBook = async(bookInfo) =>{
     genre: book.genre,
     price: book.price,
     availability: book.availability,
+    quantity:book.quantity,
     user: book.user,
     versionDate: new Date()
   });
@@ -55,6 +56,7 @@ const editBook = async(bookInfo) =>{
     book.author = author
     book.genre = genre
     book.price = price
+    book.quantity=quantity
     book.availability = availability
   await book.save();
   return book
