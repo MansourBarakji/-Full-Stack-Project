@@ -10,37 +10,37 @@ module.exports.createCart = async (req, res) => {
     userId,
   };
   const order = await orderService.createCart(cartInfo);
-  if(!order){
+  if (!order) {
     throw new ExpressError("Order not Created", 404);
   }
-  res.status(200).json(order)
+  res.status(200).json(order);
 };
 
 module.exports.completeOrder = async (req, res) => {
   const orderId = req.params.id;
-  const userId = req.user._id
+  const userId = req.user._id;
   const { address, phoneNumber, paymentMethod } = req.body;
   const orderInfo = {
     address,
     phoneNumber,
     paymentMethod,
     orderId,
-    userId
+    userId,
   };
   const order = await orderService.completeOrder(orderInfo);
-  if(!order){
+  if (!order) {
     throw new ExpressError("Order not Created", 404);
   }
-  res.status(200).json(order)
+  res.status(200).json(order);
 };
 
-module.exports.deleteOrder = async(req,res)=>{
+module.exports.deleteOrder = async (req, res) => {
   const orderId = req.params.id;
   const userId = req.user._id;
   const orderInfo = {
     orderId,
-    userId
+    userId,
   };
-   await orderService.deleteOrder(orderInfo);
-   res.status(200).json({message:'Order deleted succesful'})
-}
+  await orderService.deleteOrder(orderInfo);
+  res.status(200).json({ message: "Order deleted succesful" });
+};
