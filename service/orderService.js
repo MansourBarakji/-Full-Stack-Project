@@ -1,7 +1,6 @@
 const Cart = require("../models/cart");
 const Book = require("../models/book");
 const Order = require("../models/order");
-const User = require("../models/user");
 const ExpressError = require("../utils/express_error");
 
 const createCart = async (cartInfo) => {

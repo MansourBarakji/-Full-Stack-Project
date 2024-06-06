@@ -3,6 +3,9 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { userSchema ,bookSchema,orderSchema } = require('../joiSchemas/index');
+
+
 
 module.exports.isLogin = asyncHandler(async (req, res, next) => {
   const { authorization } = req.headers;
@@ -38,4 +41,30 @@ module.exports.hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   return hashedPassword;
+};
+
+
+module.exports.validateUser = (req, res, next) => {
+  const { error } = userSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
+};
+
+
+module.exports.validateBook = (req, res, next) => {
+  const { error } = bookSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
+};
+
+module.exports.validateOrder = (req, res, next) => {
+  const { error } = orderSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
 };
