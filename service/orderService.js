@@ -107,7 +107,7 @@ const deleteOrder = async (orderInfo) => {
 const orderService = {
   createCart,
   completeOrder,
-  deleteOrder
+  deleteOrder,
 };
 
 module.exports = orderService;

@@ -47,9 +47,7 @@ module.exports.sendResetPasswordEmail = async (req, res) => {
   try {
     await rateLimiter.consume(email);
   } catch (rejRes) {
-    return res
-      .status(429)
-      .json({ message: "Rate limit exceeded. Please try again later." });
+    throw new ExpressError("Rate limit exceeded. Please try again later.", 429);
   }
   const sendResetPass = await userService.sendResetPassEmail(email);
   if (!sendResetPass) {
