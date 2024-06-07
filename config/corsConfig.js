@@ -9,7 +9,8 @@ const corsOptions = {
             callback(new ExpressError('Not allowed by CORS', 403))
         }
     },
-    optionsSuccessStatus: 200,
+    credentials: true, // Allow credentials
+    optionsSuccessStatus: 200, // Some legacy browsers choke on 204
 }
 
 module.exports = corsOptions

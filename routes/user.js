@@ -12,6 +12,15 @@ router.post(
 );
 // User login
 router.post("/login", asyncHandler(userControllers.loginUser));
+// Get user information
+router.get("/profile", isLogin, asyncHandler(userControllers.getUserInfo));
+// Update user information
+router.put(
+  "/editProfile",
+  isLogin,
+  asyncHandler(userControllers.updateUser)
+);
+
 // Send reset password email
 router.get(
   "/sendResetPasswordEmail",
@@ -24,10 +33,5 @@ router.post(
 );
 // Verify email
 router.get("/verify/:token", asyncHandler(userControllers.verifyEmail));
-
-router
-  .route("/:id")
-  .get(isLogin, asyncHandler(userControllers.getUserInfo)) // Get user information
-  .put(isLogin, validateUser, asyncHandler(userControllers.updateUser)); // Update user information
 
 module.exports = router;

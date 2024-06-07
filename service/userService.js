@@ -56,6 +56,7 @@ const generateUserToken = (userID) => {
 
 const sendResetPassEmail = async (email) => {
   const user = await User.findOne({ email });
+  console.log({user})
   if (!user) {
     throw new ExpressError("User not found", 404);
   }

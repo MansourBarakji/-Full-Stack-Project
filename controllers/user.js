@@ -9,7 +9,7 @@ const rateLimiter = new RateLimiterMemory({
 
 module.exports.registerUser = async (req, res) => {
   const { fullName, email, password } = req.body;
-
+ 
   const userInfo = {
     fullName,
     email,
@@ -27,7 +27,6 @@ module.exports.registerUser = async (req, res) => {
 
 module.exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   const userInfo = {
     email,
     password,
@@ -42,8 +41,8 @@ module.exports.loginUser = async (req, res) => {
 };
 
 module.exports.sendResetPasswordEmail = async (req, res) => {
-  const { email } = req.body;
-
+  const  {email} = req.body;
+console.log(email)
   try {
     await rateLimiter.consume(email);
   } catch (rejRes) {
@@ -81,8 +80,7 @@ module.exports.verifyEmail = async (req, res) => {
 };
 
 module.exports.getUserInfo = async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findById(id);
+  const user = req.user;
   if (!user) {
     throw new ExpressError("User not found", 404);
   }
@@ -90,12 +88,12 @@ module.exports.getUserInfo = async (req, res) => {
 };
 
 module.exports.updateUser = async (req, res) => {
-  const userId = req.params.id;
+  const userId = req.user._id;
   const { email, fullName } = req.body;
   const userInfo = { userId, email, fullName };
   const updateUser = await userService.updateUser(userInfo);
   if (!updateUser) {
     throw new ExpressError("User not Updated", 404);
   }
-  res.json(updateUser);
+  res.status(200).json({ message: "User updated successful." });
 };
