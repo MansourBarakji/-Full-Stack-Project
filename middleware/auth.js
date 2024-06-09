@@ -3,28 +3,22 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { userSchema ,bookSchema,orderSchema } = require('../joiSchemas/index');
-
-
+const { userSchema, bookSchema, orderSchema } = require("../joiSchemas/index");
 
 module.exports.isLogin = asyncHandler(async (req, res, next) => {
   const { authorization } = req.headers;
-
   if (!authorization || !authorization.startsWith("Bearer ")) {
-    throw new ExpressError("Unauthorized no token", 401);
+    throw new ExpressError("You must be logged in first", 401);
   }
   const token = authorization.split(" ")[1];
 
   try {
-    // Verify the token and decode the payload
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // Find the user based on the decoded payload
     const user = await User.findById(decoded.userID);
     if (!user) {
       throw new ExpressError("Unauthorized ", 401);
     }
 
-    // Set the authenticated user in the request object
     req.user = user;
 
     next();
@@ -44,7 +38,6 @@ module.exports.hashPassword = async (password) => {
   return hashedPassword;
 };
 
-
 module.exports.validateUser = (req, res, next) => {
   const { error } = userSchema.validate(req.body);
   if (error) {
@@ -53,10 +46,10 @@ module.exports.validateUser = (req, res, next) => {
   next();
 };
 
-
 module.exports.validateBook = (req, res, next) => {
   const { error } = bookSchema.validate(req.body);
   if (error) {
+    console.log(error);
     return res.status(400).json({ message: error.details[0].message });
   }
   next();

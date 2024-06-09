@@ -7,7 +7,6 @@ module.exports.errorHandler = (err, req, res, next) => {
     message = "Resource Not Found";
   } else if (err.name === "MongoServerError" && err.code === 11000) {
     statusCode = 400;
-    // Extract the duplicated field name from the error message
     const fieldName = Object.keys(err.keyValue)[0];
     message = `${
       fieldName.charAt(0).toUpperCase() + fieldName.slice(1)

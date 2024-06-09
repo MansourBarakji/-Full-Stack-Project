@@ -1,7 +1,6 @@
 const ExpressError = require("../utils/express_error");
 const orderService = require("../service/orderService");
 
-// items =[ {bookId : 1 , quantity: 1} ]
 module.exports.createCart = async (req, res) => {
   const { items } = req.body;
   const userId = req.user._id;
@@ -17,9 +16,8 @@ module.exports.createCart = async (req, res) => {
 };
 
 module.exports.completeOrder = async (req, res) => {
-  const orderId = req.params.id;
+  const { address, phoneNumber, paymentMethod, orderId } = req.body;
   const userId = req.user._id;
-  const { address, phoneNumber, paymentMethod } = req.body;
   const orderInfo = {
     address,
     phoneNumber,
@@ -29,13 +27,19 @@ module.exports.completeOrder = async (req, res) => {
   };
   const order = await orderService.completeOrder(orderInfo);
   if (!order) {
-    throw new ExpressError("Order not Created", 404);
+    throw new ExpressError("Order not Completed", 404);
   }
   res.status(200).json(order);
 };
 
+module.exports.getMyOrdes = async (req, res) => {
+  const userId = req.user._id;
+  const orders = await orderService.getMyOrdes(userId);
+  res.status(200).json(orders);
+};
+
 module.exports.deleteOrder = async (req, res) => {
-  const orderId = req.params.id;
+  const orderId = req.body.id;
   const userId = req.user._id;
   const orderInfo = {
     orderId,

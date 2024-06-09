@@ -4,8 +4,10 @@ const asyncHandler = require("express-async-handler");
 const bookControllers = require("../controllers/book");
 const { isLogin, validateBook } = require("../middleware/auth");
 
-// get All Book
+// get All Books
 router.get("/", asyncHandler(bookControllers.getAllBooks));
+// get User Books
+router.get("/myBook", isLogin, asyncHandler(bookControllers.getMyBooks));
 // create Book
 router.post(
   "/createBook",
@@ -13,11 +15,22 @@ router.post(
   validateBook,
   asyncHandler(bookControllers.createBook)
 );
-
-router
-  .route("/:id")
-  .get(isLogin, asyncHandler(bookControllers.getBookInfo)) // Update book information
-  .put(isLogin, validateBook, asyncHandler(bookControllers.updateBook)) // Update book information
-  .delete(isLogin, asyncHandler(bookControllers.deleteBook)); // delete book
+// delete an old version of book
+router.post(
+  "/deleteOldBook",
+  isLogin,
+  asyncHandler(bookControllers.deleteOldBook)
+);
+// delete book with all versions
+router.post("/deleteBook", isLogin, asyncHandler(bookControllers.deleteBook));
+//edit book
+router.put(
+  "/editBook",
+  isLogin,
+  validateBook,
+  asyncHandler(bookControllers.updateBook)
+);
+//get some statistic
+router.get("/statistic", isLogin, asyncHandler(bookControllers.getStatistic));
 
 module.exports = router;

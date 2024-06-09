@@ -1,6 +1,7 @@
 const Book = require("../models/book");
 const BookVersion = require("../models/bookVersion");
 const ExpressError = require("../utils/express_error");
+const Order = require("../models/order");
 
 const createBook = async (bookInfo) => {
   const { title, author, genre, price, availability, quantity, userId } =
@@ -21,6 +22,34 @@ const createBook = async (bookInfo) => {
   return book;
 };
 
+const getMyBooks = async (userId) => {
+  const books = await Book.find({ user: userId });
+  if (!books || books.length === 0) {
+    return null;
+  }
+
+  const booksWithVersions = await Promise.all(
+    books.map(async (book) => {
+      const versions = await BookVersion.find({ bookId: book._id });
+      return { ...book._doc, versions };
+    })
+  );
+
+  return booksWithVersions;
+};
+
+const deleteOldBook = async (info) => {
+  const { userId, id } = info;
+  const oldBook = await BookVersion.findById(id);
+  if (!oldBook) {
+    throw new ExpressError("Book not found", 404);
+  }
+  if (oldBook.user.toString() !== userId.toString()) {
+    throw new ExpressError("Unauthorized access to edit this book", 403);
+  }
+  await BookVersion.findByIdAndDelete(id);
+};
+
 const getBook = async (bookId) => {
   const book = await Book.findById(bookId).populate("user");
   if (!book) {
@@ -30,25 +59,16 @@ const getBook = async (bookId) => {
 };
 
 const editBook = async (bookInfo) => {
-  const {
-    title,
-    author,
-    genre,
-    price,
-    availability,
-    quantity,
-    userId,
-    bookId,
-  } = bookInfo;
-  const book = await Book.findById(bookId);
+  const { title, author, genre, price, availability, quantity, userId, id } =
+    bookInfo;
+  const book = await Book.findById(id);
   if (!book) {
     throw new ExpressError("Book not found", 404);
   }
 
   if (book.user.toString() !== userId.toString()) {
-    throw new ExpressError("Unauthorized access to edit this shop", 403);
+    throw new ExpressError("Unauthorized access to edit this book", 403);
   }
-  // Save the current version to BookVersion
   const bookVersion = new BookVersion({
     bookId: book._id,
     title: book.title,
@@ -79,19 +99,35 @@ const deleteBook = async (bookInfo) => {
     throw new ExpressError("Book not found", 404);
   }
   if (book.user.toString() !== userId.toString()) {
-    throw new ExpressError("Unauthorized access to delete this shop", 403);
+    throw new ExpressError("Unauthorized access to delete this book", 403);
   }
-  // Delete all versions of the book
+
   await BookVersion.deleteMany({ bookId: book._id });
-  // Delete the main book
   await Book.findByIdAndDelete(bookId);
 };
 
+const getStatistic = async (userId) => {
+  const [availableBook, UnAvailableBook, MyOrders] = await Promise.all([
+    Book.countDocuments({ availability: true, user: userId }),
+    Book.countDocuments({ availability: false, user: userId }),
+    Order.countDocuments({ user: userId }),
+  ]);
+
+  const statistic = {
+    availableBook,
+    UnAvailableBook,
+    MyOrders,
+  };
+  return statistic;
+};
 const bookService = {
   createBook,
   getBook,
   editBook,
   deleteBook,
+  getMyBooks,
+  deleteOldBook,
+  getStatistic,
 };
 
 module.exports = bookService;

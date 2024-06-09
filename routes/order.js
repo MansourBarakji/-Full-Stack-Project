@@ -6,17 +6,11 @@ const { isLogin } = require("../middleware/auth");
 
 // create Book
 router.post("/", isLogin, asyncHandler(cartControllers.createCart));
-
-router.put(
-  "/:id/processed",
-  isLogin,
-  asyncHandler(cartControllers.completeOrder)
-);
-
-router.delete(
-  "/:id/delete",
-  isLogin,
-  asyncHandler(cartControllers.deleteOrder)
-);
+//get User Orders
+router.get("/myOrders", isLogin, asyncHandler(cartControllers.getMyOrdes));
+//complete Order
+router.put("/processed", isLogin, asyncHandler(cartControllers.completeOrder));
+//delete Order
+router.post("/deleteOrder", isLogin, asyncHandler(cartControllers.deleteOrder));
 
 module.exports = router;

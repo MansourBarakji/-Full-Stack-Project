@@ -16,9 +16,10 @@ connectDB();
 
 app.use(cors(corsOptions));
 
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: "50mb" }));
-app.use(xss())
+app.use(express.urlencoded({ extended: true }));
+
+app.use(xss());
 app.use(
   mongoSanitize({
     onSanitize: ({ req, key }) => {

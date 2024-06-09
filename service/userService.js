@@ -14,7 +14,6 @@ const createUser = async (userInfo) => {
   if (userExisted) {
     throw new ExpressError("User already exists", 400);
   }
-
   const user = await User.create({
     fullName,
     email,
@@ -36,7 +35,7 @@ const authenticateUser = async (userInfo) => {
   const { password, email } = userInfo;
   const user = await User.findOne({ email });
   if (!user) {
-    throw new ExpressError("User not found", 404);
+    throw new ExpressError("No User With this Credinals", 404);
   }
   const authenticated = await authUtils.authenticateUser(
     password,
@@ -56,15 +55,12 @@ const generateUserToken = (userID) => {
 
 const sendResetPassEmail = async (email) => {
   const user = await User.findOne({ email });
-  console.log({user})
   if (!user) {
-    throw new ExpressError("User not found", 404);
+    throw new ExpressError("No User Found With This Email", 404);
   }
-
   const resetToken = crypto.randomBytes(32).toString("hex");
   const resetTokenExpiry = Date.now() + 3600000;
   sendResetPasswordEmail(user.email, resetToken);
-
   user.resetToken = resetToken;
   user.resetTokenExpiry = resetTokenExpiry;
   await user.save();
@@ -73,16 +69,13 @@ const sendResetPassEmail = async (email) => {
 
 const resetPassword = async (info) => {
   const { resetToken, newPassword } = info;
-
   const user = await User.findOne({
     resetToken,
     resetTokenExpiry: { $gt: Date.now() },
   });
-
   if (!user) {
     throw new ExpressError("IInvalid or expired reset token", 400);
   }
-
   user.password = await authUtils.hashPassword(newPassword);
   user.resetToken = null;
   user.resetTokenExpiry = null;
@@ -98,7 +91,6 @@ const verifyEmail = async (token) => {
   if (!user) {
     throw new ExpressError("IInvalid or expired reset token", 400);
   }
-
   user.isVerified = true;
   user.verificationToken = null;
   user.verificationTokenExpiration = null;
@@ -112,12 +104,13 @@ const updateUser = async (userInfo) => {
   if (!user) {
     throw new ExpressError("User not found", 404);
   }
-
   user.fullName = fullName;
   user.email = email;
   await user.save();
   return user;
 };
+
+
 const userService = {
   generateUserToken,
   createUser,

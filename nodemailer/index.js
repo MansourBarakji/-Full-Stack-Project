@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
 
-// Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -9,7 +8,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to send a verification email
 module.exports.sendVerificationEmail = (email, verificationToken) => {
   const verificationLink = `http://localhost:5173/verify/${verificationToken}`;
 

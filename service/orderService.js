@@ -30,30 +30,28 @@ const createCart = async (cartInfo) => {
         price: book.price * item.quantity,
       });
       await cart.save();
-
-      // Decrease the book quantity in the inventory
-      //   book.quantity -= item.quantity;
       await book.save();
-
-      // Add the cart item to the order
       order.cart.push(cart._id);
-
-      // Calculate total price
       totalPrice += item.quantity * book.price;
-
       return cart._id;
     })
   );
-
-  // Set the total price of the order
   order.totalPrice = totalPrice;
-
-  // Save the order
   await order.save();
-
   return order;
 };
 
+const getMyOrdes = async (userId) => {
+  const orders = await Order.find({ user: userId })
+    .populate("user")
+    .populate({
+      path: "cart",
+      populate: {
+        path: "book",
+      },
+    });
+  return orders;
+};
 const completeOrder = async (orderInfo) => {
   const { address, phoneNumber, paymentMethod, userId, orderId } = orderInfo;
   const order = await Order.findById(orderId)
@@ -73,17 +71,13 @@ const completeOrder = async (orderInfo) => {
   order.address = address;
   order.phoneNumber = phoneNumber;
   order.paymentMethod = paymentMethod;
-  order.orderStatus = "Processed";
+  order.orderStatus = "Confirmed";
 
-  // Iterate through cart items and update book quantities
   for (const cartItem of order.cart) {
     const book = cartItem.book;
-    // Decrease the book quantity
     book.quantity -= cartItem.quantity;
     await book.save();
   }
-
-  // Save the updated order
   await order.save();
   return order;
 };
@@ -94,19 +88,18 @@ const deleteOrder = async (orderInfo) => {
   if (!order) {
     throw new ExpressError("Book not found", 404);
   }
-  // Check if the user is authorized to delete the order
   if (order.user.toString() !== userId.toString()) {
     throw new ExpressError("Unauthorized access to delete this shop", 403);
   }
-  // Delete all cart items associated with the order
   await Cart.deleteMany({ _id: { $in: order.cart } });
-  // Delete the main order
   await Order.findByIdAndDelete(orderId);
 };
+
 const orderService = {
   createCart,
   completeOrder,
   deleteOrder,
+  getMyOrdes,
 };
 
 module.exports = orderService;

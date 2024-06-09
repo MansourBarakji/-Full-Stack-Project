@@ -1,4 +1,3 @@
-const User = require("../models/user.js");
 const ExpressError = require("../utils/express_error");
 const userService = require("../service/userService.js");
 const { RateLimiterMemory } = require("rate-limiter-flexible");
@@ -9,7 +8,7 @@ const rateLimiter = new RateLimiterMemory({
 
 module.exports.registerUser = async (req, res) => {
   const { fullName, email, password } = req.body;
- 
+
   const userInfo = {
     fullName,
     email,
@@ -36,13 +35,11 @@ module.exports.loginUser = async (req, res) => {
     throw new ExpressError("Wrong email or password", 404);
   }
   const userToken = userService.generateUserToken(user._id);
-
   res.json({ token: userToken });
 };
 
 module.exports.sendResetPasswordEmail = async (req, res) => {
-  const  {email} = req.body;
-console.log(email)
+  const { email } = req.body;
   try {
     await rateLimiter.consume(email);
   } catch (rejRes) {
@@ -52,12 +49,13 @@ console.log(email)
   if (!sendResetPass) {
     throw new ExpressError("User not found", 404);
   }
-  res.json({ message: "Password reset email sent successful" });
+  res.json({
+    message: "Password reset email sent successfully check Your Email",
+  });
 };
 
 module.exports.resetPassword = async (req, res) => {
-  const { resetToken } = req.params;
-  const { newPassword } = req.body;
+  const { newPassword, resetToken } = req.body;
   const info = {
     resetToken,
     newPassword,
@@ -70,7 +68,7 @@ module.exports.resetPassword = async (req, res) => {
 };
 
 module.exports.verifyEmail = async (req, res) => {
-  const { token } = req.params;
+  const { token } = req.body;
 
   const user = await userService.verifyEmail(token);
   if (!user) {
