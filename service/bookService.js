@@ -13,10 +13,10 @@ const getAllBooks = async (pageNumber) => {
   const page = parseInt(pageNumber) || 1;
   const pageSize = 4;
   const [books, count] = await Promise.all([
-    Book.find({ availability: true  ,quantity: { $gt: 0 } })
+    Book.find({ availability: true, quantity: { $gt: 0 } })
       .limit(pageSize)
       .skip((page - 1) * pageSize),
-    Book.countDocuments({ availability: true, quantity: { $gt: 0 }  }),
+    Book.countDocuments({ availability: true, quantity: { $gt: 0 } }),
   ]);
 
   const totalPages = Math.ceil(count / pageSize);
@@ -178,19 +178,21 @@ const getStatistic = async (userId) => {
 const search = async (searchInfo) => {
   const { query, sort, pageNumber } = searchInfo;
   const page = parseInt(pageNumber) || 1;
-  const pageSize = 4;
+  const pageSize = 8;
   let results = [];
   let count = 0;
   let indexToSearch;
+  let totalPages = 1;
   if (!query && !sort) {
     const [r, c] = await Promise.all([
-      Book.find({ availability: true  ,quantity: { $gt: 0 } })
+      Book.find({ availability: true, quantity: { $gt: 0 } })
         .limit(pageSize)
         .skip((page - 1) * pageSize),
-      Book.countDocuments({ availability: true , quantity: { $gt: 0 } }),
+      Book.countDocuments({ availability: true, quantity: { $gt: 0 } }),
     ]);
     results = r;
     count = c;
+    totalPages = Math.ceil(count / pageSize);
   } else {
     if (sort === "asc") {
       indexToSearch = ASCbookPriceIndex;
@@ -199,17 +201,14 @@ const search = async (searchInfo) => {
     } else {
       indexToSearch = BookIndex;
     }
-    const { hits } = await indexToSearch.search(query, {
-      hitsPerPage: pageSize,
-      page: page - 1,
-    });
-   const filteredHits = hits.filter(hit => hit.availability === true && hit.quantity > 0);
-
-   results = filteredHits;
-   count = filteredHits.length;
+    const { hits } = await indexToSearch.search(query);
+    const filteredHits = hits.filter(
+      (hit) => hit.availability === true && hit.quantity > 0
+    );
+    results = filteredHits;
+    count = filteredHits.length;
   }
-  
-  const totalPages = Math.ceil(count / pageSize);
+
   const response = {
     books: results,
     pagination: {
