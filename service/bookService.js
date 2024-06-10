@@ -199,7 +199,7 @@ const search = async (searchInfo) => {
     } else {
       indexToSearch = BookIndex;
     }
-    const { hits, nbHits } = await indexToSearch.search(query, {
+    const { hits } = await indexToSearch.search(query, {
       hitsPerPage: pageSize,
       page: page - 1,
     });

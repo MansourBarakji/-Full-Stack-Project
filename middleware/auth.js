@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { userSchema, bookSchema, orderSchema } = require("../joiSchemas/index");
+const { userSchema, bookSchema, orderSchema } = require("../setup/joi_schemas");
 
 module.exports.isLogin = asyncHandler(async (req, res, next) => {
   const { authorization } = req.headers;

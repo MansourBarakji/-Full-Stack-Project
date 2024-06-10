@@ -1,3 +1,5 @@
+const logtail = require("../setup/logtail");
+
 module.exports.errorHandler = (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
@@ -13,11 +15,22 @@ module.exports.errorHandler = (err, req, res, next) => {
     } is already in use. Please choose another ${fieldName}.`;
   }
 
+  logtail.error("ERROR", {
+    path: req.path,
+    method: req.method,
+    body: req.body,
+    status: statusCode,
+    err,
+  });
+  
+  console.log("ERROR", message);
+
   res.status(statusCode).json({
     message,
     stack: process.env.NODE_ENV === "production" ? "" : err.stack,
   });
 };
+
 
 module.exports.NotFound = (req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl}`);

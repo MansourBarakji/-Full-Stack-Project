@@ -5,7 +5,7 @@ const authUtils = require("../middleware/auth.js");
 const {
   sendResetPasswordEmail,
   sendVerificationEmail,
-} = require("../nodemailer");
+} = require("../setup/nodemailer.js");
 const crypto = require("crypto");
 
 const createUser = async (userInfo) => {

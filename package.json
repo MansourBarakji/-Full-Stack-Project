@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@logtail/node": "^0.4.21",
     "algoliasearch": "^4.23.3",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
