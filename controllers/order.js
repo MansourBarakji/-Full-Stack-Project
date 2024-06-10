@@ -38,6 +38,27 @@ module.exports.getUserOrders = async (req, res) => {
   res.status(200).json(orders);
 };
 
+module.exports.cancelOrder =async(req,res)=>{
+  const {id} =req.body;
+  const userId = req.user._id
+  const orderInfo = {id ,userId}
+const order = await orderService.cancelOrder(orderInfo)
+if (!order) {
+  throw new ExpressError("Order not Cancelled", 404);
+}
+res.status(200).json({message :'Order Cancelled Successfully'});
+};
+
+module.exports.restoreOrder =async(req,res)=>{
+  const {id} =req.body;
+  const userId = req.user._id
+  const orderInfo = {id ,userId}
+const order = await orderService.restoreOrder(orderInfo)
+if (!order) {
+  throw new ExpressError("Order not Restored", 404);
+}
+res.status(200).json({message :'Order Restored Successfully'});
+};
 module.exports.deleteOrder = async (req, res) => {
   const orderId = req.body.id;
   const userId = req.user._id;

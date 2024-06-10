@@ -10,6 +10,10 @@ router.post("/", isLogin, asyncHandler(cartControllers.createCart));
 router.get("/userOrders", isLogin, asyncHandler(cartControllers.getUserOrders));
 //complete Order
 router.put("/processed", isLogin, asyncHandler(cartControllers.completeOrder));
+//cancel Order
+router.post("/cancelled", isLogin, asyncHandler(cartControllers.cancelOrder));
+//restore Order
+router.post("/restored", isLogin, asyncHandler(cartControllers.restoreOrder));
 //delete Order
 router.post("/deleteOrder", isLogin, asyncHandler(cartControllers.deleteOrder));
 

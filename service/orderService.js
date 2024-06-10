@@ -71,11 +71,17 @@ const completeOrder = async (orderInfo) => {
   order.address = address;
   order.phoneNumber = phoneNumber;
   order.paymentMethod = paymentMethod;
-  order.orderStatus = "Confirmed";
+  order.orderStatus = "Processed";
 
   for (const cartItem of order.cart) {
     const book = cartItem.book;
     book.quantity -= cartItem.quantity;
+
+    if (book.quantity <= 0) {
+      book.availability = false;
+      book.quantity = 0;
+    }
+
     await book.save();
   }
   await order.save();
@@ -86,20 +92,49 @@ const deleteOrder = async (orderInfo) => {
   const { userId, orderId } = orderInfo;
   const order = await Order.findById(orderId);
   if (!order) {
-    throw new ExpressError("Book not found", 404);
+    throw new ExpressError("Order not found", 404);
   }
   if (order.user.toString() !== userId.toString()) {
-    throw new ExpressError("Unauthorized access to delete this shop", 403);
+    throw new ExpressError("Unauthorized access to delete this order", 403);
   }
   await Cart.deleteMany({ _id: { $in: order.cart } });
   await Order.findByIdAndDelete(orderId);
 };
 
+const cancelOrder = async (orderInfo) => {
+  const { userId, id } = orderInfo;
+  const order = await Order.findById(id);
+  if (!order) {
+    throw new ExpressError("Order not found", 404);
+  }
+  if (order.user.toString() !== userId.toString()) {
+    throw new ExpressError("Unauthorized access to cancel this order", 403);
+  }
+  order.orderStatus = "Cancelled";
+  await order.save();
+  return order;
+};
+
+const restoreOrder = async (orderInfo) => {
+  const { userId, id } = orderInfo;
+  const order = await Order.findById(id);
+  if (!order) {
+    throw new ExpressError("Order not found", 404);
+  }
+  if (order.user.toString() !== userId.toString()) {
+    throw new ExpressError("Unauthorized access to cancel this order", 403);
+  }
+  order.orderStatus = "Processed";
+  await order.save();
+  return order;
+};
 const orderService = {
   createCart,
   completeOrder,
   deleteOrder,
   getUserOrders,
+  cancelOrder,
+  restoreOrder,
 };
 
 module.exports = orderService;

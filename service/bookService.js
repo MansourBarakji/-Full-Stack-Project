@@ -13,10 +13,10 @@ const getAllBooks = async (pageNumber) => {
   const page = parseInt(pageNumber) || 1;
   const pageSize = 4;
   const [books, count] = await Promise.all([
-    Book.find({ availability: true })
+    Book.find({ availability: true  ,quantity: { $gt: 0 } })
       .limit(pageSize)
       .skip((page - 1) * pageSize),
-    Book.countDocuments({ availability: true }),
+    Book.countDocuments({ availability: true, quantity: { $gt: 0 }  }),
   ]);
 
   const totalPages = Math.ceil(count / pageSize);
@@ -184,10 +184,10 @@ const search = async (searchInfo) => {
   let indexToSearch;
   if (!query && !sort) {
     const [r, c] = await Promise.all([
-      Book.find({ availability: true })
+      Book.find({ availability: true  ,quantity: { $gt: 0 } })
         .limit(pageSize)
         .skip((page - 1) * pageSize),
-      Book.countDocuments({ availability: true }),
+      Book.countDocuments({ availability: true , quantity: { $gt: 0 } }),
     ]);
     results = r;
     count = c;
@@ -203,9 +203,12 @@ const search = async (searchInfo) => {
       hitsPerPage: pageSize,
       page: page - 1,
     });
-    results = hits;
-    count = nbHits;
+   const filteredHits = hits.filter(hit => hit.availability === true && hit.quantity > 0);
+
+   results = filteredHits;
+   count = filteredHits.length;
   }
+  
   const totalPages = Math.ceil(count / pageSize);
   const response = {
     books: results,

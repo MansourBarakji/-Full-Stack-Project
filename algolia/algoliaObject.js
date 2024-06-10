@@ -5,6 +5,7 @@ module.exports.createAlgoliaBookObject = (book) => {
     author: book.author,
     genre: book.genre,
     price: book.price,
+    quantity: book.quantity,
     availability: book.availability,
   };
 };

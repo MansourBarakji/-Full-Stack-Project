@@ -24,6 +24,7 @@ connectDB().then(async () => {
       author: book.author,
       genre: book.genre,
       price: book.price,
+      quantity: book.quantity,
       availability: book.availability,
     }));
 
@@ -31,6 +32,6 @@ connectDB().then(async () => {
     await BookIndex.saveObjects(algoliaBook);
     console.log("Books added successfully to Algolia");
   } catch (error) {
-    console.error("Error indexing products to Algolia:", error);
+    console.error("Error indexing Books to Algolia:", error);
   }
 });
