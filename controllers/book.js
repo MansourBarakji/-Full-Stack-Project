@@ -1,9 +1,10 @@
-const Book = require("../models/book");
 const bookService = require("../service/bookService");
+const ExpressError = require("../utils/express_error");
 
 module.exports.getAllBooks = async (req, res) => {
-  const books = await Book.find({ availability: true });
-  res.status(200).json(books);
+  const { pageNumber } = req.body;
+  const response = await bookService.getAllBooks(pageNumber);
+  res.status(200).json(response);
 };
 
 module.exports.createBook = async (req, res) => {
@@ -25,9 +26,11 @@ module.exports.createBook = async (req, res) => {
   res.status(200).json({ message: "Book Created Succesfully" });
 };
 
-module.exports.getMyBooks = async (req, res) => {
+module.exports.getUserBooks = async (req, res) => {
+  const { pageNumber } = req.body;
   const userId = req.user._id;
-  const booksWithVersions = await bookService.getMyBooks(userId);
+  const info = { pageNumber, userId };
+  const booksWithVersions = await bookService.getUserBooks(info);
   res.status(200).json(booksWithVersions);
 };
 
@@ -80,6 +83,12 @@ module.exports.deleteBook = async (req, res) => {
 module.exports.getStatistic = async (req, res) => {
   const userId = req.user._id;
   const statistic = await bookService.getStatistic(userId);
-
   res.status(200).json(statistic);
+};
+
+module.exports.bookSearch = async (req, res) => {
+  const { query, sort, pageNumber } = req.body;
+  const searchInfo = { query, sort, pageNumber };
+  const response = await bookService.search(searchInfo);
+  res.status(200).json(response);
 };

@@ -5,9 +5,9 @@ const bookControllers = require("../controllers/book");
 const { isLogin, validateBook } = require("../middleware/auth");
 
 // get All Books
-router.get("/", asyncHandler(bookControllers.getAllBooks));
+router.post("/", asyncHandler(bookControllers.getAllBooks));
 // get User Books
-router.get("/myBook", isLogin, asyncHandler(bookControllers.getMyBooks));
+router.post("/userBooks", isLogin, asyncHandler(bookControllers.getUserBooks));
 // create Book
 router.post(
   "/createBook",
@@ -32,5 +32,8 @@ router.put(
 );
 //get some statistic
 router.get("/statistic", isLogin, asyncHandler(bookControllers.getStatistic));
+
+// book search
+router.post("/search", asyncHandler(bookControllers.bookSearch));
 
 module.exports = router;

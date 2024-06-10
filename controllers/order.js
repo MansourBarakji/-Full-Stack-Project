@@ -32,9 +32,9 @@ module.exports.completeOrder = async (req, res) => {
   res.status(200).json(order);
 };
 
-module.exports.getMyOrdes = async (req, res) => {
+module.exports.getUserOrders = async (req, res) => {
   const userId = req.user._id;
-  const orders = await orderService.getMyOrdes(userId);
+  const orders = await orderService.getUserOrders(userId);
   res.status(200).json(orders);
 };
 

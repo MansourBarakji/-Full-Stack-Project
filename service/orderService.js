@@ -41,7 +41,7 @@ const createCart = async (cartInfo) => {
   return order;
 };
 
-const getMyOrdes = async (userId) => {
+const getUserOrders = async (userId) => {
   const orders = await Order.find({ user: userId })
     .populate("user")
     .populate({
@@ -99,7 +99,7 @@ const orderService = {
   createCart,
   completeOrder,
   deleteOrder,
-  getMyOrdes,
+  getUserOrders,
 };
 
 module.exports = orderService;
