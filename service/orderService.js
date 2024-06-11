@@ -5,7 +5,6 @@ const ExpressError = require("../utils/express_error");
 
 const createCart = async (cartInfo) => {
   const { items, userId } = cartInfo;
-
   const order = new Order({
     user: userId,
     orderStatus: "Pending",

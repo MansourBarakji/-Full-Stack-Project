@@ -36,4 +36,7 @@ router.get("/statistic", isLogin, asyncHandler(bookControllers.getStatistic));
 // book search
 router.post("/search", asyncHandler(bookControllers.bookSearch));
 
+// switch book with a version 
+router.post("/switch", isLogin, asyncHandler(bookControllers.switchBook));
+
 module.exports = router;

@@ -221,6 +221,48 @@ const search = async (searchInfo) => {
   return response;
 };
 
+const switchBook =async(switchInfo)=>{
+  const {userId,id}=switchInfo
+  const bookVersion = await BookVersion.findById(id);
+  if (!bookVersion) {
+    throw new ExpressError("This Book Version is not found", 404);
+  }
+  if (bookVersion.user.toString() !== userId.toString()) {
+    throw new ExpressError("Unauthorized access to switch this book", 403);
+  }
+  const book = await Book.findById(bookVersion.bookId)
+  if (!book) {
+    throw new ExpressError("The main Book is not found", 404);
+  }
+   const {
+    title: bookTitle,
+    author: bookAuthor,
+    genre: bookGenre,
+    price: bookPrice,
+    availability: bookAvailability,
+    quantity: bookQuantity,
+  } = book;
+
+  book.title = bookVersion.title;
+  book.author = bookVersion.author;
+  book.genre = bookVersion.genre;
+  book.price = bookVersion.price;
+  book.availability = bookVersion.availability;
+  book.quantity = bookVersion.quantity;
+
+  bookVersion.title = bookTitle;
+  bookVersion.author = bookAuthor;
+  bookVersion.genre = bookGenre;
+  bookVersion.price = bookPrice;
+  bookVersion.availability = bookAvailability;
+  bookVersion.quantity = bookQuantity;
+  bookVersion.versionDate = new Date();
+
+  await book.save();
+  await bookVersion.save();
+  return book;
+};
+
 const bookService = {
   getAllBooks,
   createBook,
@@ -231,6 +273,7 @@ const bookService = {
   deleteOldBook,
   getStatistic,
   search,
+  switchBook
 };
 
 module.exports = bookService;

@@ -27,6 +27,11 @@ const bookVersionSchema = new Schema({
     required: true,
     min: 0,
   },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
   availability: {
     type: Boolean,
     default: true,

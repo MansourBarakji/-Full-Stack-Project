@@ -92,3 +92,14 @@ module.exports.bookSearch = async (req, res) => {
   const response = await bookService.search(searchInfo);
   res.status(200).json(response);
 };
+
+module.exports.switchBook = async(req,res)=>{
+  const {id} = req.body;
+  const userId = req.user._id;
+  const switchInfo = {userId , id}
+  const book = await bookService.switchBook(switchInfo);
+ if(!book){
+  throw new ExpressError("This Book is not switched", 404);
+ }
+  res.status(200).json({message:'Book Switch Succesfully'});
+}
