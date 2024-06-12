@@ -2,6 +2,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 const mongoose = require("mongoose");
 const Book = require("../models/book");
+const Cart = require("../models/cart");
+const Order = require("../models/order");
 
 const { BookIndex } = require("./index");
 
@@ -35,3 +37,14 @@ connectDB().then(async () => {
     console.error("Error indexing Books to Algolia:", error);
   }
 });
+
+// connectDB().then(async () => {
+//   try {
+//     await Cart.deleteMany({})
+//     await Order.deleteMany({})
+//     console.log("done");
+
+//   } catch (error) {
+//     console.error("Error", error);
+//   }
+// });

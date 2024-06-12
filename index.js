@@ -36,11 +36,10 @@ app.use(
 
 app.use(helmet());
 
-app.use(isAuthenticated);
 
 app.use("/api/v1/user", require("./routes/user"));
-app.use("/api/v1/book", require("./routes/book"));
-app.use("/api/v1/order", require("./routes/order"));
+app.use("/api/v1/book" ,require("./routes/book"));
+app.use("/api/v1/order",isAuthenticated, require("./routes/order"));
 
 app.use(routeNotFound);
 app.use(errorHandler);

@@ -39,14 +39,12 @@ const createBook = async (bookInfo) => {
 const getUserBooks = async (userId, pageNumber = 1) => {
   const page = parseInt(pageNumber) || 1;
   const pageSize = 4;
-
   const [books, count] = await Promise.all([
     Book.find({ user: userId })
       .limit(pageSize)
       .skip((page - 1) * pageSize),
     Book.countDocuments({ user: userId }),
   ]);
-
   if (!books || books.length === 0) {
     return null;
   }
@@ -184,6 +182,8 @@ const deleteBook = async (bookInfo) => {
   if (!book) {
     throw new ExpressError("Book not found", 404);
   }
+  console.log(book)
+  console.log({userId})
   if (book?.user?.toString() !== userId?.toString()) {
     throw new ExpressError("Unauthorized access to delete this book", 403);
   }

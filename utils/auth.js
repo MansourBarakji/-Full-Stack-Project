@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const authenticateUser = async (enteredPassword, realPassword) => {
   return await bcrypt.compare(enteredPassword, realPassword);
 };
