@@ -1,0 +1,84 @@
+.order-info-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.navigation {
+  margin-bottom: 20px;
+}
+
+.back-link {
+  color: #f8f9fa;
+  text-decoration: none;
+}
+
+.order-details {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.order-section {
+  margin-bottom: 20px;
+}
+
+.cart-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.order-status {
+  font-weight: bold;
+}
+
+.confirmed {
+  color: #28a745;
+}
+
+.processed {
+  color: #ffc107;
+}
+
+.cancelled {
+  color: #dc3545;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 4px;
+  margin-right: 1rem;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}
+
+.restore-button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 4px;
+}
+
+.restore-button:hover {
+  background-color: #218838;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 1rem;
+}
+
+.success-message {
+  color: #28a745;
+  margin-top: 1rem;
+}

@@ -1,0 +1,95 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+
+  .manage-orders-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .manage-orders-container h1 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .order-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .order-list li {
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+  }
+  
+  .order-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .order-list h3 {
+    margin: 0 0 10px;
+    color: #444;
+  }
+  
+  .order-list p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .books-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px;
+  }
+  
+  .books-list li {
+    margin: 5px 0;
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+  
+  button.confirm {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  button.deny {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .success-message {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .error-message {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .loading-message {
+    text-align: center;
+  }
+  

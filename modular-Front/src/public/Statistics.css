@@ -1,0 +1,18 @@
+
+.container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .statistics {
+    margin-top: 20px;
+  }
+  
+  .error-message {
+    color: red;
+  }
+  
+  .login-prompt {
+    color: blue;
+  }
+  

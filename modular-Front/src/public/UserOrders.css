@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.my-orders-container {
+  padding: 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.orders-section {
+  margin-bottom: 2rem;
+}
+
+.orders-section h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.orders-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.order-item {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.order-item h3 {
+  margin: 0.5rem 0;
+}
+
+.order-item p {
+  margin: 0.25rem 0;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+}
+
+.view-button, .delete-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 4px;
+}
+
+.view-button:hover, .delete-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-button {
+  background-color: #ff4757;
+}
+
+.delete-button:hover {
+  background-color: #ff6b81;
+}
+
+.no-orders-message {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}

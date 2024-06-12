@@ -1,0 +1,94 @@
+.books-container {
+  padding: 1rem 2rem;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.search-input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 300px;
+}
+
+.sort-select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.books-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.book-item {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.book-item h2 {
+  margin: 0.5rem 0;
+}
+
+.book-item p {
+  margin: 0.25rem 0;
+}
+
+.book-item button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 4px;
+}
+
+.book-item button:hover {
+  background-color: #0056b3;
+}
+
+.pagination {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  border-radius: 4px;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.pagination button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination button:disabled:hover {
+  background-color: #6c757d;
+  transform: none;
+}
