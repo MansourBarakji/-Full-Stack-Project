@@ -1,11 +1,15 @@
 const ExpressError = require("../utils/expressError");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { userSchema, bookSchema, orderSchema } = require("../setup/joiSchemas");
+const { UNAUTHORIZED_PATHS } = require("../constants/unauthorizedPaths");
 
 module.exports.isAuthenticated = asyncHandler(async (req, res, next) => {
+  if (UNAUTHORIZED_PATHS.includes(req.path)) {
+    return next();
+  }
+
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith("Bearer ")) {
     throw new ExpressError("You must be logged in first", 401);
@@ -18,8 +22,6 @@ module.exports.isAuthenticated = asyncHandler(async (req, res, next) => {
     if (!user) {
       throw new ExpressError("Unauthorized ", 401);
     }
-    console.log(user);
-
     req.user = user;
 
     next();
