@@ -15,7 +15,7 @@ const createCart = async (cartInfo) => {
     items.map(async (item) => {
       const book = await Book.findById(item.bookId);
       if (!book) {
-        throw new ExpressError("Book not found", 404);
+        throw new ExpressError("Book not found select another one ", 404);
       }
       if (item.quantity > book.quantity) {
         throw new ExpressError(
