@@ -110,7 +110,6 @@ const updateUser = async (userInfo) => {
   return user;
 };
 
-
 const userService = {
   generateUserToken,
   createUser,

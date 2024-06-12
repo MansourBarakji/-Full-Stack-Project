@@ -31,7 +31,7 @@ const createCart = async (cartInfo) => {
       await cart.save();
       await book.save();
       order.cart.push(cart._id);
-      totalPrice += item.quantity * book.price;
+      totalPrice += cart.price;
       return cart._id;
     })
   );
@@ -72,17 +72,6 @@ const completeOrder = async (orderInfo) => {
   order.paymentMethod = paymentMethod;
   order.orderStatus = "Processed";
 
-  for (const cartItem of order.cart) {
-    const book = cartItem.book;
-    book.quantity -= cartItem.quantity;
-
-    if (book.quantity <= 0) {
-      book.availability = false;
-      book.quantity = 0;
-    }
-
-    await book.save();
-  }
   await order.save();
   return order;
 };
@@ -127,12 +116,32 @@ const restoreOrder = async (orderInfo) => {
   await order.save();
   return order;
 };
+
+const getOrderToMange = async (userId) => {
+  const orders = await Order.find({ orderStatus: "Processed" })
+    .populate("user")
+    .populate({
+      path: "cart",
+      populate: {
+        path: "book",
+        match: { user: userId },
+      },
+    });
+
+  const filteredOrders = orders.filter((order) =>
+    order.cart.some(
+      (cartItem) => cartItem.book && cartItem.book.user.equals(userId)
+    )
+  );
+  return filteredOrders;
+};
 const orderService = {
   createCart,
   completeOrder,
   deleteOrder,
   getUserOrders,
   cancelOrder,
+  getOrderToMange,
   restoreOrder,
 };
 

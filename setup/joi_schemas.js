@@ -54,7 +54,7 @@ module.exports.orderSchema = Joi.object({
   totalPrice: Joi.number().min(0).required(),
   dateOrdered: Joi.date().default(Date.now),
   orderStatus: Joi.string()
-    .valid("Pending", "Confirmed", "Delivered", "Processed" ,"Cancelled")
+    .valid("Pending", "Confirmed", "Delivered", "Processed" ,"Cancelled","Denied")
     .default("Pending"),
   paymentMethod: Joi.string().valid("Cash on Delivery", "Card"),
 });

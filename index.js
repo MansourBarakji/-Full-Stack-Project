@@ -10,7 +10,6 @@ const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const { xss } = require("express-xss-sanitizer");
 const ExpressError = require("./utils/express_error");
-const PORT = process.env.PORT || 3000;
 
 connectDB();
 
@@ -39,6 +38,4 @@ app.use("/api/v1/order", require("./routes/order"));
 app.use(NotFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app;

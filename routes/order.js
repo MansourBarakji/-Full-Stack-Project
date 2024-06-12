@@ -16,5 +16,13 @@ router.post("/cancelled", isLogin, asyncHandler(cartControllers.cancelOrder));
 router.post("/restored", isLogin, asyncHandler(cartControllers.restoreOrder));
 //delete Order
 router.post("/deleteOrder", isLogin, asyncHandler(cartControllers.deleteOrder));
+//Confirm or deny order
+router.post("/action", isLogin, asyncHandler(cartControllers.confirmOrder));
+//Het Order to manage
+router.get(
+  "/getOrdersToManage",
+  isLogin,
+  asyncHandler(cartControllers.getOrderToMange)
+);
 
 module.exports = router;

@@ -208,7 +208,6 @@ const search = async (searchInfo) => {
     results = filteredHits;
     count = filteredHits.length;
   }
-
   const response = {
     books: results,
     pagination: {
@@ -221,8 +220,8 @@ const search = async (searchInfo) => {
   return response;
 };
 
-const switchBook =async(switchInfo)=>{
-  const {userId,id}=switchInfo
+const switchBook = async (switchInfo) => {
+  const { userId, id } = switchInfo;
   const bookVersion = await BookVersion.findById(id);
   if (!bookVersion) {
     throw new ExpressError("This Book Version is not found", 404);
@@ -230,11 +229,11 @@ const switchBook =async(switchInfo)=>{
   if (bookVersion.user.toString() !== userId.toString()) {
     throw new ExpressError("Unauthorized access to switch this book", 403);
   }
-  const book = await Book.findById(bookVersion.bookId)
+  const book = await Book.findById(bookVersion.bookId);
   if (!book) {
     throw new ExpressError("The main Book is not found", 404);
   }
-   const {
+  const {
     title: bookTitle,
     author: bookAuthor,
     genre: bookGenre,
@@ -260,6 +259,9 @@ const switchBook =async(switchInfo)=>{
 
   await book.save();
   await bookVersion.save();
+
+  const algoliaBook = createAlgoliaBookObject(book);
+  await BookIndex.partialUpdateObject(algoliaBook);
   return book;
 };
 
@@ -273,7 +275,7 @@ const bookService = {
   deleteOldBook,
   getStatistic,
   search,
-  switchBook
+  switchBook,
 };
 
 module.exports = bookService;
