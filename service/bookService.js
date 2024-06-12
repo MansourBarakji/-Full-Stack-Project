@@ -91,6 +91,7 @@ const getUserBooks = async (info) => {
 
 const deleteOldBook = async (info) => {
   const { userId, id } = info;
+  console.log(info)
   const oldBook = await BookVersion.findById(id);
   if (!oldBook) {
     throw new ExpressError("Book not found", 404);
