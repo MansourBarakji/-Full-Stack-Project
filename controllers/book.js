@@ -1,11 +1,6 @@
 const bookService = require("../service/bookService");
 const ExpressError = require("../utils/expressError");
 
-// module.exports.getAllBooks = async (req, res) => {
-//   const { pageNumber } = req.body;
-//   const response = await bookService.getAllBooks(pageNumber);
-//   res.status(200).json(response);
-// };
 
 module.exports.createBook = async (req, res) => {
   const userId = req.user._id;
@@ -25,10 +20,7 @@ module.exports.getUserBooks = async (req, res) => {
   const userId = req.user?._id;
 
   const books = await bookService.getUserBooks(userId, pageNumber);
-  res.status(200).json({
-    books: books,
-    currentPage: pageNumber,
-  });
+  res.status(200).json(books);
 };
 
 module.exports.deleteOldBook = async (req, res) => {
@@ -39,12 +31,6 @@ module.exports.deleteOldBook = async (req, res) => {
   res.status(200).json({ message: " This Version is deleted succesfully" });
 };
 
-module.exports.getBookInfo = async (req, res) => {
-  const bookId = req.params.id;
-
-  const book = await bookService.getBook(bookId);
-  res.status(200).json(book);
-};
 
 module.exports.updateBook = async (req, res) => {
   const { title, author, genre, price, availability, quantity, id } = req.body;

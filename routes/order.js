@@ -6,7 +6,6 @@ const { isAuthenticated } = require("../middleware/auth");
 
 // create Cart
 router.post("/", asyncHandler(cartControllers.createCart));
-
 //get User Orders
 router.get("/user", asyncHandler(cartControllers.getUserOrders));
 //complete Order
@@ -19,7 +18,7 @@ router.post("/restored", asyncHandler(cartControllers.restoreOrder));
 router.post("/deleteOrder", asyncHandler(cartControllers.deleteOrder));
 //Confirm or deny order
 router.post("/action",  asyncHandler(cartControllers.confirmOrder));
-//Het Order to manage
+//get Order to manage
 router.get(
   "/getOrdersToManage",
   asyncHandler(cartControllers.getOrderToMange)

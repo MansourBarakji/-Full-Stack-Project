@@ -31,8 +31,6 @@ async function connectQueue() {
       const messageContent = JSON.parse(message.content.toString());
       if (messageContent.type === "createCart") {
         await orderService.createCart(messageContent);
-      } else if (messageContent.type === "completeOrder") {
-        await orderService.completeOrder(messageContent);
       } else if (messageContent.type === "cancelOrder") {
         await orderService.cancelOrder(messageContent);
       } else if (messageContent.type === "restoreOrder") {

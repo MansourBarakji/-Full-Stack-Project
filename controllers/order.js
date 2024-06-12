@@ -29,17 +29,23 @@ module.exports.completeOrder = async (req, res) => {
     orderId,
     userId,
   };
-  await rabbitMQ.sendMessage(RABBIT_MQ_QUEUES.ORDER, {
-    type: "completeOrder",
-    ...orderInfo,
-  });
+  const order = await orderService.completeOrder(orderInfo);
 
-  res.sendStatus(200)
+  res.status(200).json(order);
 };
 
 module.exports.getUserOrders = async (req, res) => {
   const userId = req.user._id;
   const orders = await orderService.getUserOrders(userId);
+  res.status(200).json(orders);
+};
+
+module.exports.getOrderToMange = async (req, res) => {
+  const userId = req.user._id;
+  const orders = await orderService.getOrderToMange(userId);
+  if (!orders) {
+    throw new ExpressError("Order not found", 404);
+  }
   res.status(200).json(orders);
 };
 
@@ -93,11 +99,9 @@ module.exports.confirmOrder = async (req, res) => {
     throw new ExpressError("Order not found", 404);
   }
 
-  const ownerBooks = order.cart.filter((cartItem) =>
-    cartItem.book.user.equals(userId)
+  const ownerBooks = order.cart.filter((cartItem) =>cartItem.book.user.equals(userId)
   );
-  
-  console.log({ownerBooks})
+
   await Promise.all(
     ownerBooks.map(async (cart) => {
       const book = await Book.findById(cart.book._id);
@@ -134,12 +138,14 @@ module.exports.confirmOrder = async (req, res) => {
   order.cart = order.cart.filter(
     (cartItem) => !cartItem.book.user.equals(userId)
   );
-  order.totalPrice -= ownerTotalPrice;
-  await order.save();
+  if (order.cart.length == 0) {
+    await order.deleteOne();
+  } else {
+    order.totalPrice -= ownerTotalPrice;
+    await order.save();
+  }
 
-  res
-    .status(200)
-    .json({
-      message: `Order ${action === "confirm" ? "confirmed" : "denied"}`,
-    });
+  res.status(200).json({
+    message: `Order ${action === "confirm" ? "confirmed" : "denied"}`,
+  });
 };

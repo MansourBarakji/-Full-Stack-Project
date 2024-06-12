@@ -37,29 +37,26 @@ const createBook = async (bookInfo) => {
  * @returns {Array} books
  */
 const getUserBooks = async (userId, pageNumber = 1) => {
-  const booksPerPage = 25;
+  const page = parseInt(pageNumber) || 1;
+  const pageSize = 4;
 
-  const books = await Book.find({ user: userId })
-    .limit(booksPerPage)
-    .skip((pageNumber - 1) * booksPerPage)
-    // sort by id to avoid getting duplicates when paginating
-    .sort({ _id: -1 });
+  const [books, count] = await Promise.all([
+    Book.find({ user: userId })
+      .limit(pageSize)
+      .skip((page - 1) * pageSize),
+    Book.countDocuments({ user: userId }),
+  ]);
 
-  return books;
-};
-
-/**
- *
- * @param {String} bookId
- * @param {Number} pageNumber
- * @returns {Array} bookVersions
- */
-const getBookVersions = async (bookId, pageNumber = 1) => {
-  const bookVersionsPerPage = 25;
-  const bookVersions = await BookVersion.find({ bookId })
-    .limit(pageNumber)
-    .skip((pageNumber - 1) * bookVersionsPerPage)
-    .sort({ _id: -1 });
+  if (!books || books.length === 0) {
+    return null;
+  }
+  const booksWithVersions = await Promise.all(
+    books.map(async (book) => {
+      const versions = await BookVersion.find({ book: book._id });
+      return { ...book._doc, versions };
+    })
+  );
+  const totalPages = Math.ceil(count / pageSize);
 
   return {
     books: booksWithVersions,
@@ -71,6 +68,7 @@ const getBookVersions = async (bookId, pageNumber = 1) => {
     },
   };
 };
+
 
 const deleteOldBook = async (info) => {
   const { userId, id } = info;
@@ -89,25 +87,6 @@ const deleteOldBook = async (info) => {
   await oldBook.delete();
 };
 
-/**
- *
- * @param {String} bookId
- * @returns {Object} book
- *
- * @throws {ExpressError} if book not found
- */
-const getBook = async (bookId) => {
-  let cachedBook = await redisClient.get(bookId);
-  if (cachedBook) {
-    return JSON.parse(cachedBook);
-  }
-  const book = await Book.findById(bookId).populate("user");
-  if (!book) {
-    throw new ExpressError("Book not found", 404);
-  }
-  redisClient.setex(bookId, 3600, JSON.stringify(book));
-  return book;
-};
 
 /**
  *
@@ -159,6 +138,23 @@ const updateBook = async (bookInfo) => {
   if (book.user.toString() !== userId.toString()) {
     throw new ExpressError("Unauthorized access to edit this book", 403);
   }
+  const bookVersion = new BookVersion({
+    book: book._id,
+    title: book.title,
+    author: book.author,
+    genre: book.genre,
+    price: book.price,
+    availability: book.availability,
+    quantity: book.quantity,
+    user: book.user,
+    versionDate: new Date(),
+  });
+  await bookVersion.save();
+  // await createBookVersion({
+  //   ...bookInfo,
+  //   book: id,
+  //   user: userId,
+  // });
 
   await book.updateOne({
     title,
@@ -169,11 +165,6 @@ const updateBook = async (bookInfo) => {
     quantity,
   });
 
-  await createBookVersion({
-    ...bookInfo,
-    book: id,
-    user: userId,
-  });
   return book;
 };
 
@@ -196,6 +187,7 @@ const deleteBook = async (bookInfo) => {
   if (book?.user?.toString() !== userId?.toString()) {
     throw new ExpressError("Unauthorized access to delete this book", 403);
   }
+  await BookVersion.deleteMany({ book: book._id });
   await book.deleteOne();
 };
 
@@ -297,7 +289,7 @@ const switchBook = async (switchInfo) => {
   if (bookVersion.user.toString() !== userId.toString()) {
     throw new ExpressError("Unauthorized access to switch this book", 403);
   }
-  const book = await Book.findById(bookVersion.bookId);
+  const book = await Book.findById(bookVersion.book);
   if (!book) {
     throw new ExpressError("The main Book is not found", 404);
   }
@@ -334,9 +326,7 @@ const switchBook = async (switchInfo) => {
 
 const bookService = {
   createBook,
-  getBook,
   updateBook,
-  getBookVersions,
   createBookVersion,
   deleteOldBook,
   deleteBook,
