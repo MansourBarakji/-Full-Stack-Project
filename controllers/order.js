@@ -125,6 +125,8 @@ module.exports.confirmOrder = async (req, res) => {
   const ownerBooks = order.cart.filter((cartItem) =>
     cartItem.book.user.equals(userId)
   );
+  
+  console.log({ownerBooks})
   await Promise.all(
     ownerBooks.map(async (cart) => {
       const book = await Book.findById(cart.book._id);

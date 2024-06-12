@@ -54,40 +54,39 @@ const getUserBooks = async (userId, pageNumber = 1) => {
  * @param {Number} pageNumber
  * @returns {Array} bookVersions
  */
-const getBookVersions = async (bookId, pageNumber = 1) => {
-  const bookVersionsPerPage = 25;
-  const bookVersions = await BookVersion.find({ bookId })
-    .limit(pageNumber)
-    .skip((pageNumber - 1) * bookVersionsPerPage)
-    .sort({ _id: -1 });
+// const getBookVersions = async (bookId, pageNumber = 1) => {
+//   const bookVersionsPerPage = 25;
+//   const bookVersions = await BookVersion.find({ bookId })
+//     .limit(pageNumber)
+//     .skip((pageNumber - 1) * bookVersionsPerPage)
+//     .sort({ _id: -1 });
 
-  return bookVersions;
-};
+//   return {
+//     books: booksWithVersions,
+//     pagination: {
+//       totalBooks: count,
+//       currentPage: page,
+//       totalPages,
+//       pageSize,
+//     },
+//   };
+// };
 
-/**
- *
- * @param {String} bookVersionId
- * @param {String} userId
- *
- * @throws {ExpressError} if book version not found
- * @throws {ExpressError} if unauthorized access to delete this book version
- */
-
-const deleteBookVersion = async (bookVersionId, userId) => {
-  const bookVersion = await BookVersion.findById(bookVersionId);
-
-  if (!bookVersion) {
-    throw new ExpressError("Book version not found", 404);
+const deleteOldBook = async (info) => {
+  const { userId, id } = info;
+  const oldBook = await BookVersion.findById(id);
+  if (!oldBook) {
+    throw new ExpressError("Book not found", 404);
   }
 
-  if (bookVersion.user.toString() !== userId.toString()) {
+  if (oldBook.user.toString() !== userId.toString()) {
     throw new ExpressError(
       "Unauthorized access to delete this book version",
       403
     );
   }
 
-  await bookVersion.delete();
+  await oldBook.delete();
 };
 
 /**
@@ -289,29 +288,6 @@ const search = async (searchInfo) => {
   return response;
 };
 
-<<<<<<< HEAD
-// const switchBook = async (switchInfo) => {
-//   const { userId, id } = switchInfo;
-//   const bookVersion = await BookVersion.findById(id);
-//   if (!bookVersion) {
-//     throw new ExpressError("This Book Version is not found", 404);
-//   }
-//   if (bookVersion.user.toString() !== userId.toString()) {
-//     throw new ExpressError("Unauthorized access to switch this book", 403);
-//   }
-//   const book = await Book.findById(bookVersion.bookId);
-//   if (!book) {
-//     throw new ExpressError("The main Book is not found", 404);
-//   }
-//   const {
-//     title: bookTitle,
-//     author: bookAuthor,
-//     genre: bookGenre,
-//     price: bookPrice,
-//     availability: bookAvailability,
-//     quantity: bookQuantity,
-//   } = book;
-=======
 const switchBook = async (switchInfo) => {
   const { userId, id } = switchInfo;
   const bookVersion = await BookVersion.findById(id);
@@ -333,37 +309,28 @@ const switchBook = async (switchInfo) => {
     availability: bookAvailability,
     quantity: bookQuantity,
   } = book;
->>>>>>> master
 
-//   book.title = bookVersion.title;
-//   book.author = bookVersion.author;
-//   book.genre = bookVersion.genre;
-//   book.price = bookVersion.price;
-//   book.availability = bookVersion.availability;
-//   book.quantity = bookVersion.quantity;
 
-//   bookVersion.title = bookTitle;
-//   bookVersion.author = bookAuthor;
-//   bookVersion.genre = bookGenre;
-//   bookVersion.price = bookPrice;
-//   bookVersion.availability = bookAvailability;
-//   bookVersion.quantity = bookQuantity;
-//   bookVersion.versionDate = new Date();
+  book.title = bookVersion.title;
+  book.author = bookVersion.author;
+  book.genre = bookVersion.genre;
+  book.price = bookVersion.price;
+  book.availability = bookVersion.availability;
+  book.quantity = bookVersion.quantity;
 
-<<<<<<< HEAD
-//   await book.save();
-//   await bookVersion.save();
-//   return book;
-// };
-=======
+  bookVersion.title = bookTitle;
+  bookVersion.author = bookAuthor;
+  bookVersion.genre = bookGenre;
+  bookVersion.price = bookPrice;
+  bookVersion.availability = bookAvailability;
+  bookVersion.quantity = bookQuantity;
+  bookVersion.versionDate = new Date();
+
+
   await book.save();
   await bookVersion.save();
-
-  const algoliaBook = createAlgoliaBookObject(book);
-  await BookIndex.partialUpdateObject(algoliaBook);
   return book;
 };
->>>>>>> master
 
 const bookService = {
   createBook,
@@ -376,11 +343,8 @@ const bookService = {
   getUserBooks,
   getStatistic,
   search,
-<<<<<<< HEAD
-  // switchBook,
-=======
+
   switchBook,
->>>>>>> master
 };
 
 module.exports = bookService;
