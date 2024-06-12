@@ -44,6 +44,8 @@ const bookSchema = new Schema(
   }
 );
 
+
+
 // index books which optimize searching
 bookSchema.index({ user: 1, availability: 1, createdAt: 1, updatedAt: 1 });
 
