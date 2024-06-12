@@ -13,14 +13,12 @@ router.post("/", validateBook, asyncHandler(bookControllers.createBook));
 // book search
 router.post("/search", asyncHandler(bookControllers.bookSearch));
 
-<<<<<<< HEAD
 router.put("/", asyncHandler(bookControllers.updateBook));
 
 router
   .route("/:id")
   // get book info
   .get(asyncHandler(bookControllers.getBookInfo))
-  // update book
   // delete book
   .delete(asyncHandler(bookControllers.deleteBook));
 
@@ -32,9 +30,5 @@ router.get("/statistic", asyncHandler(bookControllers.getStatistic));
 
 // switch book with a version
 router.post("/switch", asyncHandler(bookControllers.switchBook));
-=======
-// switch book with a version
-router.post("/switch", isLogin, asyncHandler(bookControllers.switchBook));
->>>>>>> master
 
 module.exports = router;

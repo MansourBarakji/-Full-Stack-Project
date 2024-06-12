@@ -1,11 +1,11 @@
 const bookService = require("../service/bookService");
 const ExpressError = require("../utils/expressError");
 
-module.exports.getAllBooks = async (req, res) => {
-  const { pageNumber } = req.body;
-  const response = await bookService.getAllBooks(pageNumber);
-  res.status(200).json(response);
-};
+// module.exports.getAllBooks = async (req, res) => {
+//   const { pageNumber } = req.body;
+//   const response = await bookService.getAllBooks(pageNumber);
+//   res.status(200).json(response);
+// };
 
 module.exports.createBook = async (req, res) => {
   const userId = req.user._id;
@@ -38,6 +38,7 @@ module.exports.deleteOldBook = async (req, res) => {
   await bookService.deleteOldBook(info);
   res.status(200).json({ message: " This Version is deleted succesfully" });
 };
+
 module.exports.getBookInfo = async (req, res) => {
   const bookId = req.params.id;
 

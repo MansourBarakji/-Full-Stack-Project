@@ -54,23 +54,23 @@ const getUserBooks = async (userId, pageNumber = 1) => {
  * @param {Number} pageNumber
  * @returns {Array} bookVersions
  */
-// const getBookVersions = async (bookId, pageNumber = 1) => {
-//   const bookVersionsPerPage = 25;
-//   const bookVersions = await BookVersion.find({ bookId })
-//     .limit(pageNumber)
-//     .skip((pageNumber - 1) * bookVersionsPerPage)
-//     .sort({ _id: -1 });
+const getBookVersions = async (bookId, pageNumber = 1) => {
+  const bookVersionsPerPage = 25;
+  const bookVersions = await BookVersion.find({ bookId })
+    .limit(pageNumber)
+    .skip((pageNumber - 1) * bookVersionsPerPage)
+    .sort({ _id: -1 });
 
-//   return {
-//     books: booksWithVersions,
-//     pagination: {
-//       totalBooks: count,
-//       currentPage: page,
-//       totalPages,
-//       pageSize,
-//     },
-//   };
-// };
+  return {
+    books: booksWithVersions,
+    pagination: {
+      totalBooks: count,
+      currentPage: page,
+      totalPages,
+      pageSize,
+    },
+  };
+};
 
 const deleteOldBook = async (info) => {
   const { userId, id } = info;
@@ -338,12 +338,11 @@ const bookService = {
   updateBook,
   getBookVersions,
   createBookVersion,
-  deleteBookVersion,
+  deleteOldBook,
   deleteBook,
   getUserBooks,
   getStatistic,
   search,
-
   switchBook,
 };
 
