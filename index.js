@@ -9,10 +9,14 @@ const corsOptions = require("./config/corsConfig");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const { xss } = require("express-xss-sanitizer");
+<<<<<<< HEAD
 const ExpressError = require("./utils/expressError.js");
 const { isAuthenticated } = require("./middleware/auth.js");
 const { rabbitMQ } = require("./setup/rabbitmq.js");
 const PORT = process.env.PORT || 3000;
+=======
+const ExpressError = require("./utils/express_error");
+>>>>>>> master
 
 connectDB();
 rabbitMQ.connectQueue();

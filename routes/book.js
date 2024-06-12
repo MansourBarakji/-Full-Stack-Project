@@ -13,6 +13,7 @@ router.post("/", validateBook, asyncHandler(bookControllers.createBook));
 // book search
 router.post("/search", asyncHandler(bookControllers.bookSearch));
 
+<<<<<<< HEAD
 router.put("/", asyncHandler(bookControllers.updateBook));
 
 router
@@ -31,5 +32,9 @@ router.get("/statistic", asyncHandler(bookControllers.getStatistic));
 
 // switch book with a version
 router.post("/switch", asyncHandler(bookControllers.switchBook));
+=======
+// switch book with a version
+router.post("/switch", isLogin, asyncHandler(bookControllers.switchBook));
+>>>>>>> master
 
 module.exports = router;

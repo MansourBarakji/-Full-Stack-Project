@@ -277,7 +277,6 @@ const search = async (searchInfo) => {
     results = filteredHits;
     count = filteredHits.length;
   }
-
   const response = {
     books: results,
     pagination: {
@@ -290,6 +289,7 @@ const search = async (searchInfo) => {
   return response;
 };
 
+<<<<<<< HEAD
 // const switchBook = async (switchInfo) => {
 //   const { userId, id } = switchInfo;
 //   const bookVersion = await BookVersion.findById(id);
@@ -311,6 +311,29 @@ const search = async (searchInfo) => {
 //     availability: bookAvailability,
 //     quantity: bookQuantity,
 //   } = book;
+=======
+const switchBook = async (switchInfo) => {
+  const { userId, id } = switchInfo;
+  const bookVersion = await BookVersion.findById(id);
+  if (!bookVersion) {
+    throw new ExpressError("This Book Version is not found", 404);
+  }
+  if (bookVersion.user.toString() !== userId.toString()) {
+    throw new ExpressError("Unauthorized access to switch this book", 403);
+  }
+  const book = await Book.findById(bookVersion.bookId);
+  if (!book) {
+    throw new ExpressError("The main Book is not found", 404);
+  }
+  const {
+    title: bookTitle,
+    author: bookAuthor,
+    genre: bookGenre,
+    price: bookPrice,
+    availability: bookAvailability,
+    quantity: bookQuantity,
+  } = book;
+>>>>>>> master
 
 //   book.title = bookVersion.title;
 //   book.author = bookVersion.author;
@@ -327,10 +350,20 @@ const search = async (searchInfo) => {
 //   bookVersion.quantity = bookQuantity;
 //   bookVersion.versionDate = new Date();
 
+<<<<<<< HEAD
 //   await book.save();
 //   await bookVersion.save();
 //   return book;
 // };
+=======
+  await book.save();
+  await bookVersion.save();
+
+  const algoliaBook = createAlgoliaBookObject(book);
+  await BookIndex.partialUpdateObject(algoliaBook);
+  return book;
+};
+>>>>>>> master
 
 const bookService = {
   createBook,
@@ -343,7 +376,11 @@ const bookService = {
   getUserBooks,
   getStatistic,
   search,
+<<<<<<< HEAD
   // switchBook,
+=======
+  switchBook,
+>>>>>>> master
 };
 
 module.exports = bookService;
