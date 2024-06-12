@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const cartControllers = require("../controllers/order");
 const asyncHandler = require("express-async-handler");
-const { isAuthenticated } = require("../middleware/auth");
 
 // create Cart
 router.post("/", asyncHandler(cartControllers.createCart));

@@ -13,17 +13,9 @@ router.post(
 // User login
 router.post("/login", asyncHandler(userControllers.loginUser));
 // Get user information
-router.get(
-  "/profile",
-  isAuthenticated,
-  asyncHandler(userControllers.getUserInfo)
-);
+router.get("/profile", asyncHandler(userControllers.getUserInfo));
 // Update user information
-router.put(
-  "/editProfile",
-  isAuthenticated,
-  asyncHandler(userControllers.updateUser)
-);
+router.put("/editProfile", asyncHandler(userControllers.updateUser));
 // Send reset password email
 router.post(
   "/sendResetPasswordEmail",

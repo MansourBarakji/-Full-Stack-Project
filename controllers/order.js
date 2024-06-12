@@ -108,12 +108,19 @@ module.exports.confirmOrder = async (req, res) => {
       if (!book) {
         throw new ExpressError("Book not found", 404);
       }
+      if(cart.quantity >book.quantity){
+        throw new ExpressError(
+          `Requested quantity (${cart.quantity}) exceeds available quantity (${book.quantity}) for book: ${book.title} , Please exceed the quantity `,
+           404);
+      
+      }else{
       book.quantity -= cart.quantity;
       if (book.quantity <= 0) {
         book.availability = false;
         book.quantity = 0;
       }
       await book.save();
+    }
     })
   );
 
