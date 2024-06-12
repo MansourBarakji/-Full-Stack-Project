@@ -1,5 +1,5 @@
 const allowedOrigins = require("./allowedOrigin");
-const ExpressError = require("../utils/express_error");
+const ExpressError = require("../utils/expressError");
 
 const corsOptions = {
   origin: (origin, callback) => {

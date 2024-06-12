@@ -22,7 +22,7 @@ module.exports.errorHandler = (err, req, res, next) => {
     status: statusCode,
     err,
   });
-  
+
   console.log("ERROR", message);
 
   res.status(statusCode).json({
@@ -31,8 +31,7 @@ module.exports.errorHandler = (err, req, res, next) => {
   });
 };
 
-
-module.exports.NotFound = (req, res, next) => {
+module.exports.routeNotFound = (req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl}`);
   res.status(404);
   next(error);

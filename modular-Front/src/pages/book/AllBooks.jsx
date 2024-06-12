@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import useAuth from '../../hooks/useAsync';
-import NavBar from '../../components/NavBar';
-import '../../public/Books.css'; 
+import { useEffect, useState } from "react";
+import useApi from "../../hooks/useApi";
+import NavBar from "../../components/NavBar";
+import "../../public/Books.css";
 
 const BooksPage = () => {
-  const { search, loading, error } = useAuth();
+  const { search, loading, error } = useApi();
   const [books, setBooks] = useState([]);
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
-  })
-  const [query, setQuery] = useState('');
-  const [sort, setSort] = useState('');
+  });
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     pageSize: 4,
@@ -19,13 +19,17 @@ const BooksPage = () => {
     totalPages: 0,
   });
 
-useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const response = await search({ query, sort, pageNumber: pagination.currentPage });
+      const response = await search({
+        query,
+        sort,
+        pageNumber: pagination.currentPage,
+      });
       if (response) {
         setBooks(response.books);
         setPagination(response.pagination);
@@ -33,9 +37,9 @@ useEffect(() => {
     };
     fetchBooks();
   }, [search, query, sort, pagination.currentPage]);
- 
+
   const handlePageChange = (newPage) => {
-     setPagination((prev) => ({ ...prev, currentPage: newPage }));
+    setPagination((prev) => ({ ...prev, currentPage: newPage }));
   };
   const handleSearchChange = (e) => {
     setQuery(e.target.value);
@@ -55,10 +59,17 @@ useEffect(() => {
             : item
         );
       } else {
-        return [...prevCart, { bookId: book._id, title: book.title, price: book.price, quantity: 1 }];
+        return [
+          ...prevCart,
+          {
+            bookId: book._id,
+            title: book.title,
+            price: book.price,
+            quantity: 1,
+          },
+        ];
       }
     });
-   
   };
 
   return (
@@ -72,7 +83,11 @@ useEffect(() => {
           onChange={handleSearchChange}
           className="search-input"
         />
-        <select value={sort} onChange={handleSortChange} className="sort-select">
+        <select
+          value={sort}
+          onChange={handleSortChange}
+          className="sort-select"
+        >
           <option value="">Sort by</option>
           <option value="asc">Price: Low to High</option>
           <option value="desc">Price: High to Low</option>
@@ -91,24 +106,24 @@ useEffect(() => {
                 <p>Author: {book.author}</p>
                 <p>Genre: {book.genre}</p>
                 <p>Price: ${book.price}</p>
-                <button onClick={() => addToCart(book)}>
-                  Add to Cart
-                </button>
+                <button onClick={() => addToCart(book)}>Add to Cart</button>
               </div>
             ))}
           </div>
         )}
-         <div className="pagination">
-        {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            disabled={page === pagination.currentPage}
-          >
-            {page}
-          </button>
-        ))}
-      </div>
+        <div className="pagination">
+          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+            (page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                disabled={page === pagination.currentPage}
+              >
+                {page}
+              </button>
+            )
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,34 +1,35 @@
-import {Link, useLocation ,useNavigate} from 'react-router-dom';
-import useAuth from '../../hooks/useAsync';
-import { useState } from 'react';
-import '../../public/OrderInfo.css'; 
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useApi from "../../hooks/useApi";
+import { useState } from "react";
+import "../../public/OrderInfo.css";
 
 const OrderInfoPage = () => {
-  const {restoreOrder,cancelOrder, loading ,error } = useAuth();
+  const { restoreOrder, cancelOrder, loading, error } = useApi();
   const location = useLocation();
-  const { order } = location.state; 
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate(); 
+  const { order } = location.state;
+  console.log(order)
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleCancelOrder = async (id) => {
     const response = await cancelOrder(id);
     if (response && response.message) {
       setMessage(response.message);
-       setTimeout(() => {
-        navigate('/userOrders');
-      }, 2000); 
+      setTimeout(() => {
+        navigate("/userOrders");
+      }, 2000);
     }
-    };
-    const handleRestoreOrder = async (id) => {
-      const response = await restoreOrder(id);
-      if (response && response.message) {
-        setMessage(response.message);
-         setTimeout(() => {
-          navigate('/userOrders');
-        }, 2000); 
-      }
-      };
-       const renderOrderStatus = () => {
+  };
+  const handleRestoreOrder = async (id) => {
+    const response = await restoreOrder(id);
+    if (response && response.message) {
+      setMessage(response.message);
+      setTimeout(() => {
+        navigate("/userOrders");
+      }, 2000);
+    }
+  };
+  const renderOrderStatus = () => {
     switch (order.orderStatus) {
       case 'Confirmed':
         return 'We will get to you soon';
@@ -39,13 +40,15 @@ const OrderInfoPage = () => {
      case 'Denied':
     return 'This order is Deined by the Book Owner';
       default:
-        return 'Unknown status';
+        return "Unknown status";
     }
   };
   return (
     <div className="order-info-container">
       <div className="navigation">
-        <Link to="/userOrders" className="back-link">My Orders</Link>
+        <Link to="/userOrders" className="back-link">
+          My Orders
+        </Link>
       </div>
       <div className="order-details">
         <h1>Order Info</h1>
@@ -56,7 +59,7 @@ const OrderInfoPage = () => {
               {order.cart.map((item, index) => (
                 <div key={index} className="cart-item">
                   <p>Book Title: {item.book.title}</p>
-                  <p>Book Price: ${item.price}</p>
+                  <p>Sub Price: ${item.price}</p>
                   <p>Selected Quantity: {item.quantity}</p>
                 </div>
               ))}
@@ -78,16 +81,16 @@ const OrderInfoPage = () => {
               onClick={() => handleCancelOrder(order._id)} 
               className="cancel-button"
             >
-              {loading ? 'Canceling..' : 'Cancel Order'}
+              {loading ? "Canceling.." : "Cancel Order"}
             </button>
           )}
-          {order.orderStatus === 'Cancelled' && (
-            <button 
-              disabled={loading} 
-              onClick={() => handleRestoreOrder(order._id)} 
+          {order.orderStatus === "Cancelled" && (
+            <button
+              disabled={loading}
+              onClick={() => handleRestoreOrder(order._id)}
               className="restore-button"
             >
-              {loading ? 'Restoring..' : 'Restore Order'}
+              {loading ? "Restoring.." : "Restore Order"}
             </button>
           )}
         </div>

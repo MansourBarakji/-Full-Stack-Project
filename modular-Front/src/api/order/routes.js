@@ -8,7 +8,7 @@ export const ORDER_API_ROUTES ={
          MANAGE_ORDER :'/order/action'
     },
     GET:{
-        MY_ORDERS:"/order/userOrders",
+        MY_ORDERS:"/order/user",
         MANAGE_ORDER:"/order/getOrdersToManage"
     },
     PUT:{

@@ -1,56 +1,53 @@
-import { Link,useNavigate } from 'react-router-dom';
-import { useState,useEffect } from 'react';
-import useAuth from '../../hooks/useAsync';
-import '../../public/CreateBook.css'; 
-
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import useApi from "../../hooks/useApi";
+import "../../public/CreateBook.css";
 
 const CreateBookPage = () => {
+  const { createBook, loading, error } = useApi();
+  const navigate = useNavigate();
 
- const { createBook, loading, error } = useAuth();
-  const navigate = useNavigate(); 
-
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [genre, setGenre] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [genre, setGenre] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
   const [availability, setAvailability] = useState(false);
-  const [message, setMessage] = useState('');
- 
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (error === "You must be logged in first") {
       const timer = setTimeout(() => {
-        navigate('/login');
-      }, 2000); 
-      return () => clearTimeout(timer); 
+        navigate("/login");
+      }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [error, navigate]);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await createBook({
-        title,
-        author,
-        genre,
-        quantity: parseInt(quantity, 10),
-         price: parseFloat(price), 
-        availability,
-      });
+      title,
+      author,
+      genre,
+      quantity: parseInt(quantity, 10),
+      price: parseFloat(price),
+      availability,
+    });
     if (response && response.message) {
       setMessage(response.message);
-       setTimeout(() => {
-        navigate('/userBooks');
-      }, 2000); 
-     
+      setTimeout(() => {
+        navigate("/userBooks");
+      }, 2000);
     }
   };
 
   return (
     <div className="create-book-container">
       <div className="create-book-header">
-        <Link to="/userBooks" className="back-link">My Books</Link>
+        <Link to="/userBooks" className="back-link">
+          My Books
+        </Link>
       </div>
       <h1>Create Book</h1>
       <form onSubmit={handleSubmit} className="create-book-form">
@@ -115,13 +112,11 @@ const CreateBookPage = () => {
         {error && <p className="error-message">{error}</p>}
         {message && <p className="success-message">{message}</p>}
         <button type="submit" disabled={loading} className="submit-button">
-          {loading ? 'Creating...' : 'Create Book'}
+          {loading ? "Creating..." : "Create Book"}
         </button>
       </form>
-     
     </div>
   );
 };
-
 
 export default CreateBookPage;

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState,useEffect } from 'react';
-import useAuth from '../../hooks/useAsync';
+import useApi from "../../hooks/useApi";
 import '../../public/BookVersion.css'; 
 import NavBar from '../../components/NavBar';
 import '../../public/ManageOrder.css'; 
@@ -8,7 +8,7 @@ import '../../public/ManageOrder.css';
 
 const ManageOrderPage = () => {
 
- const { manageOrder,getOrdersToManage, loading, error } = useAuth();
+ const { manageOrder,getOrdersToManage, loading, error } = useApi();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
  const [message, setMessage] = useState('');
@@ -87,16 +87,14 @@ return (
               <button
                 className="confirm"
                 onClick={() => handleActionClick(order._id, 'confirm')}
-                disabled={loading}
-              >
-                {loading ? 'Confirming...' : 'Confirm Order'}
+               >
+             Confirm Order
               </button>
               <button
                 className="deny"
                 onClick={() => handledenyClick(order._id, 'deny')}
-                disabled={loading}
               >
-                {loading ? 'Denying...' : 'Deny Order'}
+               Deny Order
               </button>
             </li>
           ))}

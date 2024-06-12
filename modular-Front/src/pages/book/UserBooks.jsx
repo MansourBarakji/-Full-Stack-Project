@@ -1,12 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
-import  { useEffect, useState } from 'react';
-import useAuth from '../../hooks/useAsync';
-import {Link, useNavigate  } from 'react-router-dom'; 
-import NavBar from '../../components/NavBar';
-import '../../public/UserBooks.css'; 
+import { useEffect, useState } from "react";
+import useApi from "../../hooks/useApi";
+import { Link, useNavigate } from "react-router-dom";
+import NavBar from "../../components/NavBar";
+import "../../public/UserBooks.css";
+
 
 const UserBooksPage = () => {
-  const { getUserBooks,deleteOldBook,deleteBook, loading } = useAuth();
+  const { getUserBooks,deleteOldBook,deleteBook, loading } = useApi();
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [cart] = useState(() => {
@@ -92,7 +93,8 @@ const UserBooksPage = () => {
         <p>Price: ${book.price}</p>
         <p>Quantity: {book.quantity}</p>
         <p>Availble: {(book.availability) ? ('Yes') : ('No')}</p>
-        <button className="edit-button" onClick={() => handleEditClick(book)}>Edit</button>
+     
+        <button className="edit-button" onClick={() => handleEditClick(book)} disabled={loading}>Edit</button>
         <button className="delete-button" onClick={() => handleDeleteBook(book._id)}>Delete</button>
         <div className="book-versions">
           {book.versions && book.versions.length > 0 ? (
@@ -121,4 +123,5 @@ const UserBooksPage = () => {
   );
 };
  
+
 export default UserBooksPage;

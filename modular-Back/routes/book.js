@@ -2,41 +2,23 @@ const express = require("express");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const bookControllers = require("../controllers/book");
-const { isLogin, validateBook } = require("../middleware/auth");
+const { validateBook  } = require("../middleware/auth");
 
-// get All Books
-router.post("/", asyncHandler(bookControllers.getAllBooks));
-// get User Books
-router.post("/userBooks", isLogin, asyncHandler(bookControllers.getUserBooks));
 // create Book
-router.post(
-  "/createBook",
-  isLogin,
-  validateBook,
-  asyncHandler(bookControllers.createBook)
-);
-// delete an old version of book
-router.post(
-  "/deleteOldBook",
-  isLogin,
-  asyncHandler(bookControllers.deleteOldBook)
-);
-// delete book with all versions
-router.post("/deleteBook", isLogin, asyncHandler(bookControllers.deleteBook));
-//edit book
-router.put(
-  "/editBook",
-  isLogin,
-  validateBook,
-  asyncHandler(bookControllers.updateBook)
-);
-//get some statistic
-router.get("/statistic", isLogin, asyncHandler(bookControllers.getStatistic));
-
+router.post("/", validateBook, asyncHandler(bookControllers.createBook));
+// get user Books
+router.get("/user", asyncHandler(bookControllers.getUserBooks));
 // book search
 router.post("/search", asyncHandler(bookControllers.bookSearch));
-
+//edit book
+router.put("/editBook", asyncHandler(bookControllers.updateBook));
+//delete book with all his version
+router.delete("/:id",asyncHandler(bookControllers.deleteBook));
+// delete a version of book
+router.delete("/deleteOldBook", asyncHandler(bookControllers.deleteOldBook));
+//get some statistic
+router.get("/statistic", asyncHandler(bookControllers.getStatistic));
 // switch book with a version
-router.post("/switch", isLogin, asyncHandler(bookControllers.switchBook));
+router.post("/switch", asyncHandler(bookControllers.switchBook));
 
 module.exports = router;

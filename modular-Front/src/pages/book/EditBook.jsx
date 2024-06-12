@@ -1,15 +1,13 @@
-import { Link,useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
-import useAuth from '../../hooks/useAsync';
-import '../../public/EditBook.css'; 
-
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import useApi from "../../hooks/useApi";
+import "../../public/EditBook.css";
 
 const EditBookPage = () => {
-
- const { editBook, loading, error } = useAuth();
+  const { editBook, loading, error } = useApi();
   const location = useLocation();
   const navigate = useNavigate();
-  const { book } = location.state; 
+  const { book } = location.state;
 
   const [title, setTitle] = useState(book.title);
   const [author, setAuthor] = useState(book.author);
@@ -17,32 +15,33 @@ const EditBookPage = () => {
   const [quantity, setQuantity] = useState(book.quantity);
   const [price, setPrice] = useState(book.price);
   const [availability, setAvailability] = useState(book.availability);
-  const [message, setMessage] = useState('');
- 
+  const [message, setMessage] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await editBook({
-        id: book._id,
-        title,
-        author,
-        genre,
-        quantity: parseInt(quantity, 10), // Ensure quantity is a number
+      id: book._id,
+      title,
+      author,
+      genre,
+      quantity: parseInt(quantity, 10), // Ensure quantity is a number
       price: parseFloat(price), // Ensure price is a number with decimals
-        availability,
-      });
+      availability,
+    });
     if (response && response.message) {
       setMessage(response.message);
-       setTimeout(() => {
-        navigate('/userBooks');
-      }, 2000); 
-     
+      setTimeout(() => {
+        navigate("/userBooks");
+      }, 2000);
     }
   };
 
   return (
     <div className="edit-book-container">
       <div className="edit-book-header">
-        <Link to="/userBooks" className="back-link">Go Back</Link>
+        <Link to="/userBooks" className="back-link">
+          Go Back
+        </Link>
       </div>
       <h1>Edit Book</h1>
       <form onSubmit={handleSubmit} className="edit-book-form">
@@ -103,13 +102,11 @@ const EditBookPage = () => {
         {error && <p className="error-message"> {error}</p>}
         {message && <p className="success-message">{message}</p>}
         <button type="submit" disabled={loading} className="submit-button">
-          {loading ? 'Updating...' : 'Update Book'}
+          {loading ? "Updating..." : "Update Book"}
         </button>
       </form>
-     
     </div>
   );
 };
-
 
 export default EditBookPage;

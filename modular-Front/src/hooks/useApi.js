@@ -4,7 +4,7 @@ import userApi from "../api/user/index";
 import bookApi from "../api/book/index";
 import orderApi from "../api/order/index";
 
-export default function useAuth() {
+export default function useApi() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -156,10 +156,10 @@ export default function useAuth() {
     }
   }, []);
 
-  const getMyStatistic = useCallback(async () => {
+  const getUserStatistic = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await bookApi.getMyStatistic();
+      const response = await bookApi.getUserStatistic();
       setError(null);
       return response;
     } catch (err) {
@@ -365,7 +365,7 @@ export default function useAuth() {
     logout,
     getbooks,
     getUserBooks,
-    getMyStatistic,
+    getUserStatistic,
     deleteOldBook,
     deleteBook,
     switchBook,

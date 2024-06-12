@@ -1,28 +1,26 @@
-import  { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAsync';
-import '../../public/Verify.css'; 
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import useApi from "../../hooks/useApi";
+import "../../public/Verify.css";
 
 const VerifyPage = () => {
   const { token } = useParams();
   const navigate = useNavigate();
-  const { verifyUser, loading, error } = useAuth();
-  const [message, setMessage] = useState('');
- 
- 
+  const { verifyUser, loading, error } = useApi();
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
     const verify = async () => {
       const response = await verifyUser(token);
       if (response && response.message) {
         setMessage(response.message);
-       setTimeout(() => {
-          navigate('/');
-        }, 2000); 
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       }
     };
 
     verify();
-
   }, [token, verifyUser, navigate]);
 
   return (
