@@ -40,6 +40,7 @@ module.exports.deleteOldBook = async (req, res) => {
 };
 module.exports.getBookInfo = async (req, res) => {
   const bookId = req.params.id;
+
   const book = await bookService.getBook(bookId);
   res.status(200).json(book);
 };

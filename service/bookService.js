@@ -7,6 +7,7 @@ const {
   ASCbookPriceIndex,
   DESCbookPriceIndex,
 } = require("../algolia/index");
+const { redisClient } = require("../setup/redis");
 
 /**
  *
@@ -97,10 +98,15 @@ const deleteBookVersion = async (bookVersionId, userId) => {
  * @throws {ExpressError} if book not found
  */
 const getBook = async (bookId) => {
+  let cachedBook = await redisClient.get(bookId);
+  if (cachedBook) {
+    return JSON.parse(cachedBook);
+  }
   const book = await Book.findById(bookId).populate("user");
   if (!book) {
     throw new ExpressError("Book not found", 404);
   }
+  redisClient.setex(bookId, 3600, JSON.stringify(book));
   return book;
 };
 
