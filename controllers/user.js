@@ -1,4 +1,4 @@
-const ExpressError = require("../utils/express_error");
+const ExpressError = require("../utils/expressError.js");
 const userService = require("../service/userService.js");
 const { RateLimiterMemory } = require("rate-limiter-flexible");
 const rateLimiter = new RateLimiterMemory({

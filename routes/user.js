@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userControllers = require("../controllers/user");
 const asyncHandler = require("express-async-handler");
-const { isLogin, validateUser } = require("../middleware/auth");
+const { isAuthenticated, validateUser } = require("../middleware/auth");
 
 // User registration
 router.post(
@@ -13,9 +13,17 @@ router.post(
 // User login
 router.post("/login", asyncHandler(userControllers.loginUser));
 // Get user information
-router.get("/profile", isLogin, asyncHandler(userControllers.getUserInfo));
+router.get(
+  "/profile",
+  isAuthenticated,
+  asyncHandler(userControllers.getUserInfo)
+);
 // Update user information
-router.put("/editProfile", isLogin, asyncHandler(userControllers.updateUser));
+router.put(
+  "/editProfile",
+  isAuthenticated,
+  asyncHandler(userControllers.updateUser)
+);
 // Send reset password email
 router.post(
   "/sendResetPasswordEmail",

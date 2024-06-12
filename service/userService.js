@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const ExpressError = require("../utils/express_error");
-const authUtils = require("../middleware/auth.js");
+const ExpressError = require("../utils/expressError.js");
+const authUtils = require("../utils/auth.js");
 const {
   sendResetPasswordEmail,
   sendVerificationEmail,
@@ -109,7 +109,6 @@ const updateUser = async (userInfo) => {
   await user.save();
   return user;
 };
-
 
 const userService = {
   generateUserToken,

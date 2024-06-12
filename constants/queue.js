@@ -1,0 +1,3 @@
+module.exports.RABBIT_MQ_QUEUES = {
+  ORDER: "PRODUCTION_ORDER_QUEUE",
+};
