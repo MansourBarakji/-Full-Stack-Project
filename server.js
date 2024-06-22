@@ -29,6 +29,6 @@ if (cluster.isMaster) {
 } else {
   // Workers can share any TCP connection
   app.listen(PORT, () => {
-    console.log(`Worker ${process.pid} started, server is running on port ${PORT}`);
+    console.log(`server is running on port ${PORT}`);
   });
 }
