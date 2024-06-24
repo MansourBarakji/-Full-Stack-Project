@@ -8,7 +8,7 @@ This project comprises two main folders: modular-Back and modular-Front.
 We have provided step-by-step guidance to help you set up both the backend and frontend environments seamlessly.
 
 1- Installation Instructions: 
-Clone the Repository: git clone https://github.com/MansourBarakji/ModularCX-Project.git
+Clone the Repository: git clone https://github.com/MansourBarakji/-Full-Stack-Project.git
 
 2- Navigate to the both Directory:
 -cd modular-Back and excute 'npm install' and then run 'npm run dev'
